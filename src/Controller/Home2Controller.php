@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class Home2Controller extends AbstractController
 {
 
-    #[Route("/",name:"app_homepage")]
+    #[Route("/", name: "app_homepage")]
     public function homepage(): Response
     {
         $tracks = [
@@ -21,16 +22,20 @@ class Home2Controller extends AbstractController
             ['song' => 'Fantasy', 'artist' => 'Mariah Carey'],
         ];
         return $this->render('home2.html.twig', [
-            'title'=>'PB & Jams',
-            'tracks'=>$tracks
+            'title' => 'PB & Jams',
+            'tracks' => $tracks
         ]);
     }
 
-    #[Route("/browse/{slug}",name:"app_browse")]
-    public function browse(string $slug = null): Response
+    #[Route("/browse/{slug}", name: "app_browse")]
+    public function browse(DateTimeFormatter $dateTimeFormatter, string $slug = null): Response
     {
         $genre = $slug ? str_replace('-', ' ', $slug) : null;
         $mixes = $this->getMixes();
+        foreach ($mixes as $key=>$mix) {
+            $mixes[$key]['ago'] = $dateTimeFormatter->formatDiff($mix['createdAt']);
+        }
+        dd($mixes);
         return $this->render('browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
