@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+{% block title %}
+     {{title}}   | {{ parent() }}
+{% endblock %}
+{% block body %}
+    {# Twig syntax comment #}
+
+{# Loop array #}
+<ul>
+{% for skill in skills %}
+<li>{{skill.name |upper}}: {{skill.version}} </li>    
+{% endfor %}
+</ul>
+{% endblock %}
+
